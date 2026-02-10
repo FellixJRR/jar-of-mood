@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jar of Mood 🌷</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #e6d9ff, #ffe6f0, #e6f2ff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 30px;
+    width: 90%;
+    max-width: 420px;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+}
+
+h1 {
+    font-weight: 500;
+    color: #5a4d7a;
+}
+
+p {
+    color: #6f6f8a;
+}
+
+.mood-btn {
+    width: 100%;
+    padding: 14px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 15px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+    background: #f0ecff;
+    color: #5a4d7a;
+}
+
+.mood-btn:hover {
+    transform: scale(1.03);
+    background: #e6ddff;
+}
+
+.hidden {
+    display: none;
+}
+
+.message {
+    font-size: 17px;
+    margin: 25px 0;
+    color: #4b4b66;
+}
+
+.action-btn {
+    padding: 10px 18px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 5px;
+    background: #ffe6f0;
+    color: #7a4d61;
+}
+
+.action-btn:hover {
+    background: #ffd6e6;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <div id="menu">
+        <h1>Jar of Mood 🌷</h1>
+        <p>Pilih perasaan kamu hari ini</p>
+
+        <button class="mood-btn" onclick="openMood('sedih')">😔 Sedih</button>
+        <button class="mood-btn" onclick="openMood('capek')">😴 Capek</button>
+        <button class="mood-btn" onclick="openMood('cemas')">😟 Cemas</button>
+        <button class="mood-btn" onclick="openMood('senang')">😊 Senang</button>
+    </div>
+
+    <div id="moodPage" class="hidden">
+        <h1 id="moodTitle"></h1>
+        <div class="message" id="messageBox"></div>
+
+        <button class="action-btn" onclick="nextMessage()">Berikutnya</button>
+        <button class="action-btn" onclick="changeSong()">Ganti Lagu 🎵</button>
+        <button class="action-btn" onclick="backMenu()">Menu Utama</button>
+
+        <audio id="music" loop></audio>
+    </div>
+</div>
+
+<script>
+const moods = {
+    sedih: {
+        title: "😔 Kamu lagi sedih",
+        music: [
+            "music/sedih1.mp3",
+            "music/sedih2.mp3"
+        ],
+        messages: [
+            "Gapapa kalau hari ini berat, kamu sudah bertahan sejauh ini 🤍",
+            "Kamu nggak sendirian, pelan-pelan ya napasnya",
+            "Hari buruk tidak menentukan nilai dirimu"
+        ]
+    },
+    capek: {
+        title: "😴 Kamu lagi capek",
+        music: [
+            "music/capek1.mp3",
+            "music/capek2.mp3"
+        ],
+        messages: [
+            "Capek itu tanda kamu sudah berusaha",
+            "Istirahat sebentar juga bentuk keberanian",
+            "Kamu boleh berhenti sejenak"
+        ]
+    },
+    cemas: {
+        title: "😟 Kamu lagi cemas",
+        music: [
+            "music/cemas1.mp3",
+            "music/cemas2.mp3"
+        ],
+        messages: [
+            "Tarik napas, kamu aman sekarang",
+            "Tidak semua yang kamu takutkan akan terjadi",
+            "Pelan-pelan, satu langkah cukup"
+        ]
+    },
+    senang: {
+        title: "😊 Kamu lagi senang",
+        music: [
+            "music/senang1.mp3",
+            "music/senang2.mp3"
+        ],
+        messages: [
+            "Nikmati perasaan ini 🤍",
+            "Kamu pantas bahagia",
+            "Semoga hari ini terus baik"
+        ]
+    }
+};
+
+let currentMood = "";
+let index = 0;
+let lastSong = "";
+
+function openMood(mood) {
+    currentMood = mood;
+    index = 0;
+
+    document.getElementById("menu").classList.add("hidden");
+    document.getElementById("moodPage").classList.remove("hidden");
+
+    document.getElementById("moodTitle").innerText = moods[mood].title;
+    document.getElementById("messageBox").innerText = moods[mood].messages[index];
+
+    changeSong();
+}
+
+function nextMessage() {
+    index = (index + 1) % moods[currentMood].messages.length;
+    document.getElementById("messageBox").innerText = moods[currentMood].messages[index];
+}
+
+function changeSong() {
+    const music = document.getElementById("music");
+    const songs = moods[currentMood].music;
+    let newSong;
+
+    do {
+        newSong = songs[Math.floor(Math.random() * songs.length)];
+    } while (newSong === lastSong && songs.length > 1);
+
+    lastSong = newSong;
+    music.src = newSong;
+    music.play();
+}
+
+function backMenu() {
+    document.getElementById("moodPage").classList.add("hidden");
+    document.getElementById("menu").classList.remove("hidden");
+
+    const music = document.getElementById("music");
+    music.pause();
+    music.currentTime = 0;
+}
+</script>
+
+</body>
+</html>
