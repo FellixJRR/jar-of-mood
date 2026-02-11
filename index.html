@@ -13,11 +13,9 @@ body {
     font-family: 'Poppins', sans-serif;
     min-height: 100vh;
     background: linear-gradient(135deg, #e6d9ff, #ffe6f0, #e6f2ff);
-
     display: flex;
     justify-content: center;
     align-items: flex-start;
-
     padding: 30px 15px;
     box-sizing: border-box;
 }
@@ -26,31 +24,20 @@ body {
     background: rgba(255, 255, 255, 0.75);
     backdrop-filter: blur(12px);
     border-radius: 24px;
-
     padding: 35px 25px;
-
     width: 100%;
     max-width: 420px;
-
     text-align: center;
     box-shadow: 0 15px 40px rgba(0,0,0,0.1);
-    animation: fadeIn 0.6s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
 }
 
 h1 {
     font-weight: 500;
     color: #5a4d7a;
-    margin-bottom: 10px;
 }
 
 p {
     color: #6f6f8a;
-    margin-bottom: 20px;
 }
 
 .mood-btn {
@@ -131,102 +118,173 @@ p {
 </div>
 
 <script>
-const moods = {
-    sedih: {
-        title: "😔 Kamu lagi sedih",
-        music: [
-            "music/sedih1.mp3",
-            "music/sedih2.mp3"
-        ],
-        messages: [
-            "Gapapa kalau hari ini berat, kamu sudah bertahan sejauh ini 🤍",
-            "Kamu nggak sendirian, pelan-pelan ya napasnya",
-            "Hari buruk tidak menentukan nilai dirimu"
-        ]
-    },
-    capek: {
-        title: "😴 Kamu lagi capek",
-        music: [
-            "music/capek1.mp3",
-            "music/capek2.mp3"
-        ],
-        messages: [
-            "Capek itu tanda kamu sudah berusaha",
-            "Istirahat sebentar juga bentuk keberanian",
-            "Kamu boleh berhenti sejenak"
-        ]
-    },
-    cemas: {
-        title: "😟 Kamu lagi cemas",
-        music: [
-            "music/cemas1.mp3",
-            "music/cemas2.mp3"
-        ],
-        messages: [
-            "Tarik napas, kamu aman sekarang",
-            "Tidak semua yang kamu takutkan akan terjadi",
-            "Pelan-pelan, satu langkah cukup"
-        ]
-    },
-    senang: {
-        title: "😊 Kamu lagi senang",
-        music: [
-            "music/senang1.mp3",
-            "music/senang2.mp3"
-        ],
-        messages: [
-            "Nikmati perasaan ini 🤍",
-            "Kamu pantas bahagia",
-            "Semoga hari ini terus baik"
-        ]
+    const moods = {
+        sedih: {
+            title: "🌧 Hari yang Berat..",
+            music: ["music/sedih1.mp3", "music/sedih2.mp3"],
+            messages: [
+                "Tidak apa-apa merasa sedih",
+                "Kamu sudah kuat sejauh ini💪",
+                "Hari buruk tidak menentukan dirimu🫵",
+                "Pelan-pelan saja ya",
+                "Kamu tidak gagal, kamu hanya lelah😊",
+                "Tangismu tidak membuatmu lemah, jika perlu ditangiskan maka tangiskan tidak perlu ditahan",
+                "REMEMBER YOU ARE NOT ALONE!! FRIENDS, FAMILIES, THEY ALWAYS THERE FOR YOU!!.",
+                "Kamu sudah bertahan sejauh ini, itu luar biasa",
+                "Sedihmu valid, dan kamu tetap pantas dicintai😇",
+                "Kamu tidak sendirian, walau terasa sepi",
+                "Ini hanya hari yang buruk, bukan hidup yang buruk",
+                "Kamu lebih kuat dari yang kamu kira😉",
+                "Luka ini tidak selamanya",
+                "Dunia belum selesai memberimu kejutan indah",
+                "Sakit hari ini bisa jadi cerita kuatmu nanti",
+                "Kamu berharga✨",
+                "Semua akan membaik😉",
+                "Hayooo mana senyum Pepsodentnya? WKWKWK"
+            ]
+        },
+        capek: {
+            title: "🌿 Waktunya Jeda, Pelan dulu..",
+            music: ["music/capek1.mp3", "music/capek2.mp3"],
+            messages: [
+                "Istirahat bukan berarti menyerah🙅‍♀️",
+                "Kamu sudah berusaha keras",
+                "Berhenti sebentar itu wajar",
+                "Tarik napas yang dalam",
+                "Kamu tidak malas, kamu hanya lelah😪",
+                "Istirahat itu bagian dari perjalanan, bukan jeda yang sia-sia",
+                "Pelan pelan ya... tidak semua harus selesai hari ini",
+                "Tidak apa apa berhenti sebentar..",
+                "Kamu sudah melakukan yang terbaik hari ini😇",
+                "Dunia bisa menunggu tetapi kesehatanmu tidak boleh terganggu. YOUR HEALTHY IS IMPORTANT!",
+                "Kamu bukan mesin, kamu manusia. Manusia itu butuh istirahat😴",
+                "Capek itu tanda kamu sedang berusaha",
+                "Tubuh dan hatimu juga butuh dipeluk. Need Hug? Sending Virtual Hug to you🫂...",
+                "Tidak perlu selalu kuat setiap waktu",
+                "Rehat bukan berarti kalah",
+                "Diam sejenak juga bentuk keberanian🫵",
+                "Ada pepatah pernah mengatakan, Pelan tapi pasti..",
+                "Jangan terlalu keras sama diri sendiri ya😇"
+            ]
+        },
+        cemas: {
+            title: "🌊 Pikiranmu Padat..",
+            music: ["music/cemas1.mp3", "music/cemas2.mp3"],
+            messages: [
+                "Kamu aman sekarang",
+                "Tidak semua yang kamu takutkan terjadi",
+                "Satu langkah kecil cukup🏃‍♀️",
+                "Pelan-pelan yaaa",
+                "Jangan terlalu dipikirin..",
+                "Kamu aman saat ini🤗",
+                "Biarkan pikiran lewat seperti awan☁️",
+                "Tidak semua pikiran harus dipercaya😈",
+                "Tenang... semuanya belum tentu seburuk yang kamu pikirkan😊",
+                "Jangan hukum diri sendiri dengan asumsi",
+                "Fokus saja pada yang bisa kamu kendalikan, jangan terpengaruh oleh rasa cemasmu😉",
+                "Kamu tetap berharga bahkan saat panik✨",
+                "Semua akan reda, untuk sekarang fokus saja🫵"
+            ]
+        },
+        senang: {
+            title: "✨ Hatimu Bersinar",
+            music: ["music/senang1.mp3", "music/senang2.mp3"],
+            messages: [
+                "Nikmati momen ini😌",
+                "Kamu pantas bahagia",
+                "Senyummu indah hari ini🤩",
+                "Semoga cerahnya bertahan lama😁",
+                "Ini baru dirimu yang kukenal😏",
+                "Simpan rasa ini baik baik dihati",
+                "Senyummu membuat dunia lebih ringan",
+                "Hari ini terasa bersahabat ya",
+                "Jangan lupa berterima kasih pada dirimu sendiri😉",
+                "Adem bet tu hati...",
+                "Energi senangnya sampai sini gesss",
+                "Tetaplah bersinar seperti ini",
+                "Keep that smile😁🫵",
+                "Eaaa lagi senang..",
+                "Jangan takut menikmati kebahagiaan",
+                "Simpan kenangan ini untuk hari yang sulit nanti"
+            ]
+        }
+    };
+    
+    let currentMood = "";
+    let messageQueue = [];
+    let messageIndex = 0;
+    let lastSong = "";
+    
+    /* === SHUFFLE FUNCTION === */
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
     }
-};
+    
+    /* === SIAPKAN PESAN (SHUFFLE SEKALI) === */
+    function prepareMessages() {
+        messageQueue = [...moods[currentMood].messages];
+        shuffleArray(messageQueue);
+        messageIndex = 0;
+    }
+    
+    function openMood(mood) {
+        currentMood = mood;
+    
+        document.getElementById("menu").classList.add("hidden");
+        document.getElementById("moodPage").classList.remove("hidden");
+    
+        document.getElementById("moodTitle").innerText = moods[mood].title;
+    
+        prepareMessages();
+        showNextMessage();
+        changeSong();
+    }
+    
+    /* === TAMPILKAN PESAN TANPA PENGULANGAN === */
+    function showNextMessage() {
+        if (messageIndex >= messageQueue.length) {
+            prepareMessages(); // kalau sudah habis, shuffle ulang
+        }
+    
+        document.getElementById("messageBox").innerText = messageQueue[messageIndex];
+        messageIndex++;
+    }
+    
+    function nextMessage() {
+        showNextMessage();
+    }
+    
+    /* === GANTI LAGU TANPA PENGULANGAN BERUNTUN === */
+    function changeSong() {
+        const music = document.getElementById("music");
+        const songs = moods[currentMood].music;
+        let newSong;
+    
+        do {
+            newSong = songs[Math.floor(Math.random() * songs.length)];
+        } while (newSong === lastSong && songs.length > 1);
+    
+        lastSong = newSong;
+        music.src = newSong;
+        music.play();
+    }
+    
+    function backMenu() {
+        messageQueue = [];
+        messageIndex = 0;
 
-let currentMood = "";
-let index = 0;
-let lastSong = "";
-
-function openMood(mood) {
-    currentMood = mood;
-    index = 0;
-
-    document.getElementById("menu").classList.add("hidden");
-    document.getElementById("moodPage").classList.remove("hidden");
-
-    document.getElementById("moodTitle").innerText = moods[mood].title;
-    document.getElementById("messageBox").innerText = moods[mood].messages[index];
-
-    changeSong();
-}
-
-function nextMessage() {
-    index = (index + 1) % moods[currentMood].messages.length;
-    document.getElementById("messageBox").innerText = moods[currentMood].messages[index];
-}
-
-function changeSong() {
-    const music = document.getElementById("music");
-    const songs = moods[currentMood].music;
-    let newSong;
-
-    do {
-        newSong = songs[Math.floor(Math.random() * songs.length)];
-    } while (newSong === lastSong && songs.length > 1);
-
-    lastSong = newSong;
-    music.src = newSong;
-    music.play();
-}
-
-function backMenu() {
-    document.getElementById("moodPage").classList.add("hidden");
-    document.getElementById("menu").classList.remove("hidden");
-
-    const music = document.getElementById("music");
-    music.pause();
-    music.currentTime = 0;
-}
-</script>
+        document.getElementById("moodPage").classList.add("hidden");
+        document.getElementById("menu").classList.remove("hidden");
+    
+        const music = document.getElementById("music");
+        music.pause();
+        music.currentTime = 0;
+    }
+    </script>
+       
 
 </body>
 </html>
