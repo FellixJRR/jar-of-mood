@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mood Capsule 🌷</title>
+<title>Moodora 🌷</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
 
@@ -32,7 +32,7 @@ body {
 }
 
 h1 {
-    font-weight: 500;
+    font-weight: 400;
     color: #5a4d7a;
 }
 
@@ -89,6 +89,73 @@ p {
     background: #ffd6e6;
     box-shadow: 0 6px 15px rgba(0,0,0,0.08);
 }
+
+.playlist-scroll {
+    max-height: 180px;
+    overflow-y: auto;
+    margin-top: 10px;
+    border-radius: 12px;
+    border: 1px solid #e0d9ff;
+}
+
+.playlist-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.playlist-table th {
+    background: #f0ecff;
+    padding: 8px;
+    position: sticky;
+    top: 0;
+}
+
+.playlist-table td {
+    padding: 5px;
+    text-align: left;
+}
+
+.playlist-table tr {
+    cursor: pointer;
+}
+
+.playlist-table tr:hover {
+    background: #f7f4ff;
+}
+
+.music-controls {
+    display: flex;
+    gap: 6px;
+}
+
+.music-btn {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    font-size: 14px;
+    border-radius: 50%;
+    border: none;
+    background: #f0ecff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.music-btn:hover {
+    background: #e0d9ff;
+}
+
+.all-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: nowrap;
+    margin-top: 10px;
+}
+
 </style>
 </head>
 
@@ -96,7 +163,7 @@ p {
 
 <div class="container">
     <div id="menu">
-        <h1>Capsule of Mood 🌷</h1>
+        <h1>Moodora 🌷</h1>
         <p>Pilih perasaan kamu hari ini</p>
 
         <button class="mood-btn" onclick="openMood('sedih')">😔 Sedih</button>
@@ -108,12 +175,31 @@ p {
     <div id="moodPage" class="hidden">
         <h1 id="moodTitle"></h1>
         <div class="message" id="messageBox"></div>
-
+    <div class="all-controls">
         <button class="action-btn" onclick="nextMessage()">Berikutnya</button>
-        <button class="action-btn" onclick="changeSong()">Ganti Lagu 🎵</button>
+        <div class="music-controls">
+            <button type="button" class="music-btn" onclick="prevSong()">⏮</button>
+            <button type="button" class="music-btn" id="playPauseBtn" onclick="togglePlay()">⏸</button>
+            <button type="button" class="music-btn" onclick="nextSong()">⏭</button>
+        </div>       
         <button class="action-btn" onclick="backMenu()">Menu Utama</button>
+    </div>
+        <audio id="music"></audio>
+        <h3 style="margin-top:25px;">🎵 Daftar Lagu</h3>
 
-        <audio id="music" loop></audio>
+        <div class="playlist-scroll">
+            <table class="playlist-table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Lagu</th>
+                    </tr>
+                </thead>
+                <tbody id="songList"></tbody>
+            </table>
+        </div>
+
+
     </div>
 </div>
 
@@ -121,7 +207,6 @@ p {
     const moods = {
         sedih: {
             title: "🌧 Hari yang Berat..",
-            music: ["music/sedih1.mp3", "music/sedih2.mp3", "music/sedih3.mp3"],
             messages: [
                 "Tidak apa-apa merasa sedih",
                 "Kamu sudah kuat sejauh ini💪",
@@ -154,7 +239,6 @@ p {
         },
         capek: {
             title: "🌿 Waktunya Jeda, Pelan dulu..",
-            music: ["music/capek1.mp3", "music/capek2.mp3", "music/capek3.mp3", "music/capek4.mp3"],
             messages: [
                 "Istirahat bukan berarti menyerah🙅‍♀️",
                 "Kamu sudah berusaha keras",
@@ -185,7 +269,6 @@ p {
         },
         cemas: {
             title: "🌊 Pikiranmu Padat..",
-            music: ["music/cemas1.mp3", "music/cemas2.mp3", "music/cemas3.mp3"],
             messages: [
                 "Kamu aman sekarang",
                 "Tidak semua yang kamu takutkan terjadi",
@@ -215,7 +298,6 @@ p {
         },
         senang: {
             title: "✨ Hatimu Bersinar",
-            music: ["music/senang1.mp3", "music/senang2.mp3", "music/senang3.mp3", "music/senang4.mp3", "music/senang5.mp3"],
             messages: [
                 "Nikmati momen ini😌",
                 "Kamu pantas bahagia",
@@ -245,12 +327,71 @@ p {
             ]
         }
     };
+
+    const globalSongs = [
+        "music/Bintang 5 - Tenxi & Jemsii.mp3",
+        "music/Blue - yung kai.mp3",
+        "music/Calon Mantu Idaman - Rombongan Bodonk Koplo.mp3",
+        "music/Diri - TULUS.mp3",
+        "music/End of Beginning - Djo.mp3",
+        "music/Hati hati dijalan - TULUS.mp3",
+        "music/Kau Rumahku - Raissa Aggiani.mp3",
+        "music/Kita Usahakan - BATAS SENJA.mp3",
+        "music/One of The Girls - Weekend, JENNIE, Lily-Rose.mp3",
+        "music/Runtuh - Feby Putri.mp3",
+        "music/Lesung Pipi - Raim Laode.mp3",
+        "music/Garam & Madu - Tenxi.mp3",
+        "music/Kasih Aba Aba - Tenxi.mp3",
+        "music/Senyumlah - Andmesh.mp3",
+        "music/We can't be friends - Ariana Grande.mp3"
+    ];
     
     let currentMood = "";
     let messageQueue = [];
     let messageIndex = 0;
-    let lastSong = "";
-    
+    let lastSongIndex = -1;
+
+    let currentSongIndex = 0;
+
+    function loadSong(index) {
+        const music = document.getElementById("music");
+        music.src = globalSongs[index];
+    }
+
+    function nextSong() {
+        currentSongIndex++;
+        if (currentSongIndex >= globalSongs.length) {
+            currentSongIndex = 0;
+        }
+        loadSong(currentSongIndex);
+        document.getElementById("music").play();
+        document.getElementById("playPauseBtn").innerHTML = "⏸";
+    }
+
+    function prevSong() {
+        currentSongIndex--;
+        if (currentSongIndex < 0) {
+            currentSongIndex = globalSongs.length - 1;
+        }
+        loadSong(currentSongIndex);
+        document.getElementById("music").play();
+        document.getElementById("playPauseBtn").innerHTML = "⏸";
+    }
+
+    function togglePlay() {
+        const music = document.getElementById("music");
+        const btn = document.getElementById("playPauseBtn");
+
+        if (music.paused) {
+            music.play();
+            btn.innerHTML = "⏸";
+        } else {
+            music.pause();
+            btn.innerHTML = "▶";
+        }
+    }
+
+
     /* === SHUFFLE FUNCTION === */
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
@@ -258,63 +399,90 @@ p {
             [array[i], array[j]] = [array[j], array[i]];
         }
     }
-    
-    /* === SIAPKAN PESAN (SHUFFLE SEKALI) === */
+
     function prepareMessages() {
         messageQueue = [...moods[currentMood].messages];
         shuffleArray(messageQueue);
         messageIndex = 0;
     }
-    
+
     function openMood(mood) {
         currentMood = mood;
-    
+
         document.getElementById("menu").classList.add("hidden");
         document.getElementById("moodPage").classList.remove("hidden");
-    
+
         document.getElementById("moodTitle").innerText = moods[mood].title;
-    
+
         prepareMessages();
         showNextMessage();
-        changeSong();
+        renderSongList();
+        playRandomSong();
     }
-    
-    /* === TAMPILKAN PESAN TANPA PENGULANGAN === */
+
     function showNextMessage() {
         if (messageIndex >= messageQueue.length) {
-            prepareMessages(); // kalau sudah habis, shuffle ulang
+            prepareMessages();
         }
-    
+
         document.getElementById("messageBox").innerText = messageQueue[messageIndex];
         messageIndex++;
     }
-    
+
     function nextMessage() {
         showNextMessage();
     }
-    
-    /* === GANTI LAGU TANPA PENGULANGAN BERUNTUN === */
-    function changeSong() {
+
+    /* === PLAY RANDOM SONG === */
+    function playRandomSong() {
         const music = document.getElementById("music");
-        const songs = moods[currentMood].music;
-        let newSong;
-    
+        let newIndex;
+
         do {
-            newSong = songs[Math.floor(Math.random() * songs.length)];
-        } while (newSong === lastSong && songs.length > 1);
-    
-        lastSong = newSong;
-        music.src = newSong;
+            newIndex = Math.floor(Math.random() * globalSongs.length);
+        } while (newIndex === lastSongIndex && globalSongs.length > 1);
+
+        lastSongIndex = newIndex;
+        music.src = globalSongs[newIndex];
         music.play();
     }
-    
+
+    /* === PLAY SELECTED SONG === */
+    function playSelectedSong(index) {
+        const music = document.getElementById("music");
+        lastSongIndex = index;
+        music.src = globalSongs[index];
+        music.play();
+    }
+
+    /* === AUTO NEXT RANDOM SAAT SELESAI === */
+    document.getElementById("music").addEventListener("ended", function () {
+        playRandomSong();
+    });
+
+    /* === RENDER TABLE PLAYLIST === */
+    function renderSongList() {
+        const tableBody = document.getElementById("songList");
+        tableBody.innerHTML = "";
+
+        globalSongs.forEach((song, index) => {
+            const row = `
+                <tr onclick="playSelectedSong(${index})" style="cursor:pointer">
+                    <td>${index + 1}</td>
+                    <td>${song.split('/').pop()}</td>
+                </tr>
+            `;
+            tableBody.innerHTML += row;
+        });
+    }
+
     function backMenu() {
         messageQueue = [];
         messageIndex = 0;
 
         document.getElementById("moodPage").classList.add("hidden");
         document.getElementById("menu").classList.remove("hidden");
-    
+
         const music = document.getElementById("music");
         music.pause();
         music.currentTime = 0;
