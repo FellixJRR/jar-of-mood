@@ -13,9 +13,10 @@ body {
     font-family: 'Poppins', sans-serif;
     min-height: 100vh;
     background: linear-gradient(135deg, #e6d9ff, #ffe6f0, #e6f2ff);
+
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    flex-direction: column;   /* ⬅ TAMBAHKAN INI */
+    align-items: center;      /* ⬅ Center horizontal */
     padding: 30px 15px;
     box-sizing: border-box;
 }
@@ -156,6 +157,56 @@ p {
     margin-top: 10px;
 }
 
+.music-player-wrapper {
+    width: 100%;
+    display: none; /* default hidden */
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.music-player-box {
+    width: 100%;
+    max-width: 420px; /* samakan dengan container */
+    padding: 14px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 18px;
+    font-size: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.now-playing {
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: #7a4d61;
+}
+
+.time-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    margin-bottom: 6px;
+    color: #555;
+}
+
+#progressBar {
+    width: 100%;
+    height: 5px;
+    appearance: none;
+    border-radius: 10px;
+    background: #f0ecff;
+    outline: none;
+}
+
+#progressBar::-webkit-slider-thumb {
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #d291bc;
+    cursor: pointer;
+}
+
+
 </style>
 </head>
 
@@ -200,6 +251,21 @@ p {
         </div>
 
 
+    </div>
+</div>
+
+<div class="music-player-wrapper" id="musicPlayerWrapper">
+    <div class="music-player-box">
+        <div class="now-playing" id="currentSongName">
+            Tidak ada lagu diputar
+        </div>
+
+        <div class="time-row">
+            <span id="currentTime">0:00</span>
+            <span id="duration">0:00</span>
+        </div>
+
+        <input type="range" id="progressBar" value="0" min="0" max="100">
     </div>
 </div>
 
@@ -373,8 +439,8 @@ p {
     let currentSongIndex = 0;
 
     function loadSong(index) {
-        const music = document.getElementById("music");
         music.src = globalSongs[index];
+        updateSongName(index);
     }
 
     function nextSong() {
@@ -385,6 +451,8 @@ p {
         loadSong(currentSongIndex);
         document.getElementById("music").play();
         document.getElementById("playPauseBtn").innerHTML = "⏸";
+
+        updateSongName(currentSongIndex);
     }
 
     function prevSong() {
@@ -395,6 +463,8 @@ p {
         loadSong(currentSongIndex);
         document.getElementById("music").play();
         document.getElementById("playPauseBtn").innerHTML = "⏸";
+
+        updateSongName(currentSongIndex);
     }
 
     function togglePlay() {
@@ -437,6 +507,7 @@ p {
         showNextMessage();
         renderSongList();
         playRandomSong();
+        showPlayer();
     }
 
     function showNextMessage() {
@@ -454,7 +525,6 @@ p {
 
     /* === PLAY RANDOM SONG === */
     function playRandomSong() {
-        const music = document.getElementById("music");
         let newIndex;
 
         do {
@@ -462,17 +532,22 @@ p {
         } while (newIndex === lastSongIndex && globalSongs.length > 1);
 
         lastSongIndex = newIndex;
+        currentSongIndex = newIndex;
+
         music.src = globalSongs[newIndex];
+        updateSongName(newIndex);
         music.play();
     }
 
-    /* === PLAY SELECTED SONG === */
     function playSelectedSong(index) {
-        const music = document.getElementById("music");
         lastSongIndex = index;
+        currentSongIndex = index;
+
         music.src = globalSongs[index];
+        updateSongName(index);
         music.play();
     }
+
 
     /* === AUTO NEXT RANDOM SAAT SELESAI === */
     document.getElementById("music").addEventListener("ended", function () {
@@ -505,23 +580,62 @@ p {
         const music = document.getElementById("music");
         music.pause();
         music.currentTime = 0;
+
+        hidePlayer();
     }
+
+    /* === PROGRESS BAR SYSTEM === */
+    const music = document.getElementById("music");
+    const progressBar = document.getElementById("progressBar");
+    const currentTimeEl = document.getElementById("currentTime");
+    const durationEl = document.getElementById("duration");
+    const currentSongName = document.getElementById("currentSongName");
+    const musicPlayerWrapper = document.getElementById("musicPlayerWrapper");
+
+    function formatTime(time) {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return minutes + ":" + (seconds < 10 ? "0" + seconds : seconds);
+    }
+
+    /* tampilkan progress bar saat mood dibuka */
+    function showPlayer() {
+        musicPlayerWrapper.style.display = "flex";
+    }
+
+    /* sembunyikan saat kembali ke menu */
+    function hidePlayer() {
+        musicPlayerWrapper.style.display = "none";
+    }
+
+    /* update durasi */
+    music.addEventListener("loadedmetadata", function () {
+        durationEl.textContent = formatTime(music.duration);
+    });
+
+    /* update progress */
+    music.addEventListener("timeupdate", function () {
+        if (!music.duration) return;
+
+        const percent = (music.currentTime / music.duration) * 100;
+        progressBar.value = percent;
+        currentTimeEl.textContent = formatTime(music.currentTime);
+    });
+
+    /* geser progress */
+    progressBar.addEventListener("input", function () {
+        const seekTime = (progressBar.value / 100) * music.duration;
+        music.currentTime = seekTime;
+    });
+
+    /* update nama lagu */
+    function updateSongName(index) {
+        const fileName = globalSongs[index].split('/').pop();
+        currentSongName.textContent = fileName;
+    }
+
     </script>
        
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
